@@ -1,0 +1,132 @@
+digraph G { 
+    label = "INFRA PROJECT (L2TPv3)";
+    labelloc = top;
+ 
+    node [shape=record];
+    edge [dir=both];
+subgraph cluster_0 {
+		label = r1;
+	
+        "r1-eth0" [label=<
+            <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
+                <tr><td bgcolor="lightblue"><b>r1-eth0</b></td></tr>
+                <tr><td align="left">IP: 172.16.1.253/24</td></tr>
+            </table>
+        >];
+	}
+subgraph cluster_1 {
+		label = r2;
+	
+        "r2-eth0" [label=<
+            <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
+                <tr><td bgcolor="lightblue"><b>r2-eth0</b></td></tr>
+                <tr><td align="left">IP: 172.16.2.253/24</td></tr>
+            </table>
+        >];
+	}
+subgraph cluster_2 {
+		label = rA;
+	
+        "rA-eth0" [label=<
+            <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
+                <tr><td bgcolor="lightblue"><b>rA-eth0</b></td></tr>
+                <tr><td align="left">IP: 172.16.1.254/24</td></tr>
+            </table>
+        >];
+        "rA-eth1" [label=<
+            <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
+                <tr><td bgcolor="lightblue"><b>rA-eth1</b></td></tr>
+                <tr><td align="left">IP: 10.87.0.1/24</td></tr>
+            </table>
+        >];
+	}
+subgraph cluster_3 {
+		label = rB;
+	
+        "rB-eth0" [label=<
+            <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
+                <tr><td bgcolor="lightblue"><b>rB-eth0</b></td></tr>
+                <tr><td align="left">IP: 172.16.2.254/24</td></tr>
+            </table>
+        >];
+        "rB-eth1" [label=<
+            <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
+                <tr><td bgcolor="lightblue"><b>rB-eth1</b></td></tr>
+                <tr><td align="left">IP: 10.87.0.2/24</td></tr>
+            </table>
+        >];
+	}
+subgraph cluster_4 {
+		label = p1;
+	
+	}
+subgraph cluster_5 {
+		label = p2;
+	
+	}
+subgraph cluster_6 {
+		label = p3;
+	
+	}
+subgraph cluster_7 {
+		label = p4;
+	
+	}
+subgraph cluster_8 {
+		label = internet;
+	
+        "internet" [label=<
+            <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
+                <tr><td bgcolor="orange"><b>internet</b></td></tr>
+            </table>
+        >];
+	}
+subgraph cluster_9 {
+		label = resB;
+	
+        "resB" [label=<
+            <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
+                <tr><td bgcolor="orange"><b>resB</b></td></tr>
+            </table>
+        >];
+	}
+subgraph cluster_10 {
+		label = resC;
+	
+        "resC" [label=<
+            <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
+                <tr><td bgcolor="orange"><b>resC</b></td></tr>
+            </table>
+        >];
+	}
+subgraph cluster_11 {
+		label = resD;
+	
+        "resD" [label=<
+            <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
+                <tr><td bgcolor="orange"><b>resD</b></td></tr>
+            </table>
+        >];
+	}
+subgraph cluster_12 {
+		label = resE;
+	
+        "resE" [label=<
+            <table border="0" cellborder="1" cellspacing="0" cellpadding="4">
+                <tr><td bgcolor="orange"><b>resE</b></td></tr>
+            </table>
+        >];
+	}
+ "resC"->"r1-eth0"; 
+ "resD"->"r1-eth1"; 
+ "resB"->"r2-eth0"; 
+ "resE"->"r2-eth1"; 
+ "resC"->"rA-eth0"; 
+ "internet"->"rA-eth1"; 
+ "resB"->"rB-eth0"; 
+ "internet"->"rB-eth1"; 
+ "resE"->"p1-eth0"; 
+ "resE"->"p2-eth0"; 
+ "resD"->"p3-eth0"; 
+ "resD"->"p4-eth0"; 
+}

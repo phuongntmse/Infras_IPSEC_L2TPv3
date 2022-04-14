@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# r1
+ip netns exec r1 ip link add link r1-eth1 name r1-eth1.100 type vlan id 100
+ip netns exec r1 ip link set dev r1-eth1.100 up
+ip netns exec r1 ip addr add 192.168.100.254/24 dev r1-eth1.100
+ip netns exec r1 ip link add link r1-eth1 name r1-eth1.200 type vlan id 200
+ip netns exec r1 ip link set dev r1-eth1.200 up
+ip netns exec r1 ip addr add 192.168.200.254/24 dev r1-eth1.200
+
+# p3
+ip netns exec p3 ip link add link p3-eth0 name p3-eth0.100 type vlan id 100
+ip netns exec p3 ip link set p3-eth0.100 up
+
+# p4
+ip netns exec p4 ip link add link p4-eth0 name p4-eth0.200 type vlan id 200
+ip netns exec p4 ip link set p4-eth0.200 up

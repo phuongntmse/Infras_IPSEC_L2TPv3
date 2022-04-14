@@ -1,0 +1,41 @@
+#!/bin/bash
+
+# r1
+ip netns exec r1 ip l2tp add tunnel remote 172.16.2.253 local 172.16.1.253 encap ip tunnel_id 3000 peer_tunnel_id 4000
+ip netns exec r1 ip l2tp add session tunnel_id 3000 session_id 1000 peer_session_id 2000
+ip netns exec r1 ip link set l2tpeth0 up
+ip netns exec r1 brctl addbr tunnel
+ip netns exec r1 brctl addif tunnel l2tpeth0
+ip netns exec r1 brctl addif tunnel r1-eth1
+ip netns exec r1 ip link set tunnel up
+ip netns exec r1 ip link add link tunnel name tunnel.100 type vlan id 100
+ip netns exec r1 ip link set tunnel.100 up
+ip netns exec r1 ip link add link tunnel name tunnel.200 type vlan id 200
+ip netns exec r1 ip link set tunnel.200 up
+ip netns exec r1 ip addr add 192.168.100.254/24 dev tunnel.100
+ip netns exec r1 ip addr add 192.168.200.254/24 dev tunnel.200
+
+# r2
+ip netns exec r2 ip l2tp add tunnel remote 172.16.1.253 local 172.16.2.253 encap ip tunnel_id 4000 peer_tunnel_id 3000
+ip netns exec r2 ip l2tp add session tunnel_id 4000 session_id 2000 peer_session_id 1000
+ip netns exec r2 ip link set l2tpeth0 up
+ip netns exec r2 brctl addbr tunnel
+ip netns exec r2 brctl addif tunnel l2tpeth0
+ip netns exec r2 brctl addif tunnel r2-eth1
+ip netns exec r2 ip link set tunnel up
+
+# p1
+ip netns exec p1 ip link add link p1-eth0 name p1-eth0.100 type vlan id 100
+ip netns exec p1 ip link set p1-eth0.100 up
+
+# p2
+ip netns exec p2 ip link add link p2-eth0 name p2-eth0.200 type vlan id 200
+ip netns exec p2 ip link set p2-eth0.200 up
+
+# p3
+ip netns exec p3 ip link add link p3-eth0 name p3-eth0.100 type vlan id 100
+ip netns exec p3 ip link set p3-eth0.100 up
+
+# p4
+ip netns exec p4 ip link add link p4-eth0 name p4-eth0.200 type vlan id 200
+ip netns exec p4 ip link set p4-eth0.200 up

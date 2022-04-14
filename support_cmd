@@ -1,0 +1,37 @@
+############################################## V L A N ##########################################
+# run DHCP sever 
+sudo ip netns exec r1 dnsmasq -d -z -i r1-eth1.100 -F 192.168.100.0,192.168.100.60,255.255.255.0 
+sudo ip netns exec r1 dnsmasq -d -z -i r1-eth1.200 -F 192.168.200.0,192.168.200.60,255.255.255.0 
+# connect to get IP address
+sudo ip netns exec p3 dhclient p3-eth0.100 
+sudo ip netns exec p4 dhclient p4-eth0.200 
+# capture traffic
+sudo ip netns exec r1 tcpdump -lnvv -i r1-eth1 -e vlan
+# ping (p3 -> p4)
+sudo ip netns exec p3 ping [IP address of p4]
+########################################## T U N N E L ##########################################
+# run DHCP sever
+sudo ip netns exec r1 dnsmasq -d -z -i tunnel.100 -F 192.168.100.0,192.168.100.180,255.255.255.0
+sudo ip netns exec r1 dnsmasq -d -z -i tunnel.200 -F 192.168.200.0,192.168.200.180,255.255.255.0
+# connect to get IP address
+sudo ip netns exec p1 dhclient p1-eth0.100
+sudo ip netns exec p3 dhclient p3-eth0.100
+sudo ip netns exec p4 dhclient p4-eth0.200
+sudo ip netns exec p2 dhclient p2-eth0.200 
+# capture traffic
+sudo ip netns exec r1 tcpdump -lnvv -i tunnel -e vlan
+# ping (p3 -> p1)
+sudo ip netns exec p3 ping [IP address of p1]
+#################################### CAPTURE PCAP ###############################################
+# capture pcap on router A
+sudo ip netns exec rA tcpdump -s 0 -w rA.pcap
+# ping (p3 -> p2)
+sudo ip netns exec p3 ping [IP address of p2]
+#################################### I P E R F ##################################################
+# on r1
+sudo ip netns exec r1  iperf -s
+# on p1
+sudo ip netns exec p1 iperf -c 192.168.100.254
+#################################### DHCP on R2 #################################################
+sudo ip netns exec r2 dnsmasq -d --dhcp-relay=192.168.100.253,192.168.100.254,tunnel.100 --dhcp-relay=192.168.100.253,192.168.200.254,tunnel.200 --dhcp-option=tunnel,3,192.168.100.253
+
